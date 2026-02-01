@@ -155,6 +155,7 @@ function QueryEditor({
       />
       <div className="bg-secondary text-secondary-foreground flex w-full items-center justify-between gap-4 border-t border-input px-2 py-2">
         <Select
+          key={databaseKey}
           value=""
           onValueChange={(value) => {
             const example = database.examples[value as keyof typeof database.examples];
