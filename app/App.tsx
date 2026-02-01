@@ -45,9 +45,8 @@ type DatabaseKey = keyof Databases;
 function Background() {
   return (
     <div
-      className="absolute inset-0 z-0"
+      className="absolute inset-0 z-0 bg-background"
       style={{
-        backgroundColor: "#0a0a0a",
         backgroundImage:
           "radial-gradient(circle at 25% 25%, #222222 0.5px, transparent 1px), radial-gradient(circle at 75% 75%, #111111 0.5px, transparent 1px)",
         backgroundSize: "10px 10px",
@@ -62,7 +61,7 @@ function SocialLinks() {
     <div className="absolute right-4 top-4 flex items-center gap-4">
       <ButtonGroup>
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           nativeButton={false}
           render={
@@ -72,7 +71,7 @@ function SocialLinks() {
           }
         />
         <Button
-          variant="outline"
+          variant="secondary"
           size="icon"
           nativeButton={false}
           render={
@@ -102,6 +101,7 @@ function DatabaseToggle({ selectedDb, onChange }: { selectedDb: DatabaseKey; onC
     <ToggleGroup
       variant="outline"
       size="lg"
+      className="bg-background"
       value={[selectedDb]}
       onValueChange={(value) => {
         const [next] = value as DatabaseKey[];
@@ -154,14 +154,14 @@ function QueryEditor({
   const plan = plans[databaseKey] ?? "";
   const setPlan = (value: string) => setPlans((prev) => ({ ...prev, [databaseKey]: value }));
   return (
-    <div>
+    <div className="group rounded-md border border-input bg-secondary overflow-hidden transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30">
       <Textarea
         style={{ resize: "none" }}
-        className="min-h-96 rounded-b-none dark:bg-secondary"
+        className="min-h-96 rounded-none border-0 bg-secondary dark:bg-secondary focus-visible:ring-0"
         value={plan}
         onChange={(e) => setPlan(e.target.value)}
       />
-      <div className="bg-secondary text-secondary-foreground flex w-full items-center justify-between gap-4 border-b-2 border-x-2 px-2 py-2 rounded-b-md">
+      <div className="bg-secondary text-secondary-foreground flex w-full items-center justify-between gap-4 border-t border-input px-2 py-2">
         <Select
           value=""
           onValueChange={(value) => {
