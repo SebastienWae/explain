@@ -149,8 +149,7 @@ function QueryEditor({
   return (
     <div className="group rounded-md border border-input bg-secondary overflow-hidden transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30">
       <Textarea
-        style={{ resize: "none" }}
-        className="min-h-96 rounded-none border-0 bg-secondary dark:bg-secondary focus-visible:ring-0"
+        className="min-h-96 max-h-[60vh] rounded-none border-0 bg-secondary dark:bg-secondary focus-visible:ring-0"
         value={plan}
         onChange={(e) => setPlan(e.target.value)}
       />
