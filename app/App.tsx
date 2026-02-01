@@ -15,26 +15,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const DATABASES = {
+  duckdb: {
+    name: "DuckDB",
+    explain_query: "EXPLAIN (ANALYZE, FORMAT JSON)\n[your-query]",
+    examples: {
+      "duck test 1": "duckdb",
+    },
+  },
   postgresql: {
     name: "PostgreSQL",
     explain_query: "EXPLAIN (ANALYZE, FORMAT JSON, VERBOSE, BUFFERS)\n[your-query]",
     examples: {
       "ps test 1": "postgresql1",
       "ps test 2": "postgresql2",
-    },
-  },
-  sqlite: {
-    name: "SQLite",
-    explain_query: ".mode json\n.stats on\nEXPLAIN QUERY PLAN\n[your-query]",
-    examples: {
-      "sq test": "sqlite",
-    },
-  },
-  duckdb: {
-    name: "DuckDB",
-    explain_query: "EXPLAIN (ANALYZE, FORMAT JSON)\n[your-query]",
-    examples: {
-      "duck test 1": "duckdb",
     },
   },
 } as const;
@@ -217,7 +210,7 @@ function PrivacyNotice() {
 }
 
 function App() {
-  const [selectedDb, setSelectedDb] = useState<DatabaseKey>("postgresql");
+  const [selectedDb, setSelectedDb] = useState<DatabaseKey>("duckdb");
   const [plans, setPlans] = useState<Record<string, string>>({});
   return (
     <div className="min-h-screen w-full relative">
