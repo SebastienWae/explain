@@ -1,75 +1,40 @@
-# React + TypeScript + Vite
+# Explain Plan Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Explain Plan Visualizer is a small, in-browser tool that turns database `EXPLAIN` output into an interactive graph and details view. Everything runs locally in your browser, so plan data never leaves your device.
 
-Currently, two official plugins are available:
+![Explain Plan Visualizer screenshot](screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Highlights**
+- Visualize query plans as an interactive graph.
+- Inspect node details for deeper analysis.
+- Runs entirely in-browser with zero data upload.
 
-## React Compiler
+**Supported Databases**
+- PostgreSQL
+- DuckDB
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+**How To Get A Plan**
+PostgreSQL:
+```sql
+EXPLAIN (ANALYZE, FORMAT JSON, VERBOSE, BUFFERS)
+[your-query]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+DuckDB:
+```sql
+EXPLAIN (ANALYZE, FORMAT JSON)
+[your-query]
 ```
+
+**Quickstart**
+```bash
+bun install
+bun run app:dev
+```
+Vite will print the local URL after the dev server starts.
+
+**Handy Commands**
+- `bun run app:dev` start the app dev server
+- `bun run app:build` typecheck + build the frontend
+- `bun run app:lint` lint the frontend
+- `bun run app:fix` format and fix the frontend
