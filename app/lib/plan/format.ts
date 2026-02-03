@@ -1,15 +1,11 @@
+const countFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 8,
+  useGrouping: true,
+});
+
 export function formatCount(value?: number) {
   if (value === undefined || value === null || Number.isNaN(value)) return "—";
-  if (value === 0) return "0";
-  const abs = Math.abs(value);
-  if (abs >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}b`;
-  if (abs >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}m`;
-  if (abs >= 1_000) return `${(value / 1_000).toFixed(1)}k`;
-  if (abs >= 100) return `${value.toFixed(0)}`;
-  if (abs >= 10) return `${value.toFixed(1)}`;
-  if (abs >= 1) return `${value.toFixed(2)}`;
-  if (abs >= 0.1) return `${value.toFixed(3)}`;
-  return `${value.toFixed(4)}`;
+  return countFormatter.format(value);
 }
 
 export function formatMs(value?: number) {
