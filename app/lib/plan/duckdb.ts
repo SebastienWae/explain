@@ -2,6 +2,11 @@ import type { NormalizedPlanGraph, NormalizedPlanNode, PlanEdge, PlanMetrics, Pl
 import { parseJsonFromText, toNumber } from "@/lib/plan/parse";
 import { buildDuckdbWarnings } from "@/lib/plan/warnings";
 
+function toMs(value?: number) {
+  if (value === undefined) return undefined;
+  return value * 1000;
+}
+
 function normalizeOperatorName(node: Record<string, unknown>) {
   const operatorName = node.operator_name;
   const operatorType = node.operator_type;
@@ -17,6 +22,32 @@ function formatDuckdbLabel(nodeType: string, node: Record<string, unknown>) {
   return nodeType;
 }
 
+function formatDetailValue(value: unknown) {
+  if (value === undefined || value === null) return undefined;
+  if (Array.isArray(value)) {
+    const filtered = value.map((item) => String(item)).filter(Boolean);
+    return filtered.length ? filtered.join(", ") : undefined;
+  }
+  const text = String(value);
+  return text.trim() ? text : undefined;
+}
+
+function formatDuckdbDetail(node: Record<string, unknown>) {
+  const extraInfo = node.extra_info as Record<string, unknown> | undefined;
+  if (!extraInfo) return undefined;
+
+  const orderBy = formatDetailValue(extraInfo["Order By"]);
+  if (orderBy) return `by ${orderBy}`;
+
+  const conditions = formatDetailValue(extraInfo.Conditions);
+  if (conditions) return `on ${conditions}`;
+
+  const filters = formatDetailValue(extraInfo.Filters ?? extraInfo.Filter);
+  if (filters) return `filter ${filters}`;
+
+  return undefined;
+}
+
 export function parseDuckdbPlan(rawPlan: string): NormalizedPlanGraph {
   const json = parseJsonFromText(rawPlan);
   const root = Array.isArray(json) ? json[0] : json;
@@ -27,8 +58,9 @@ export function parseDuckdbPlan(rawPlan: string): NormalizedPlanGraph {
   const rootRecord = root as Record<string, unknown>;
   const planStats = rootRecord.planStats as Record<string, unknown> | undefined;
   const stats: PlanStats = {
-    executionTimeMs:
+    executionTimeMs: toMs(
       toNumber(planStats?.executionTime) ?? toNumber(rootRecord.executionTime) ?? toNumber(rootRecord.cpu_time),
+    ),
   };
 
   const nodes: NormalizedPlanNode[] = [];
@@ -44,7 +76,7 @@ export function parseDuckdbPlan(rawPlan: string): NormalizedPlanGraph {
     const extraInfo = node.extra_info as Record<string, unknown> | undefined;
     const estimated = extraInfo?.["Estimated Cardinality"];
 
-    const operatorTiming = toNumber(node.operator_timing);
+    const operatorTiming = toMs(toNumber(node.operator_timing));
     const operatorRows = toNumber(node.operator_cardinality);
     const operatorRowsScanned = toNumber(node.operator_rows_scanned);
     const resultSize = toNumber(node.result_set_size);
@@ -56,6 +88,7 @@ export function parseDuckdbPlan(rawPlan: string): NormalizedPlanGraph {
       actualRows: operatorRows,
       planRows,
       resultSize,
+      bufferBytes: resultSize,
       rowsScanned: operatorRowsScanned,
     };
 
@@ -63,6 +96,7 @@ export function parseDuckdbPlan(rawPlan: string): NormalizedPlanGraph {
       id,
       type: nodeType,
       label,
+      detail: formatDuckdbDetail(node),
       db: "duckdb",
       metrics,
       warnings: [],

@@ -58,10 +58,10 @@ export function PlanDetailsPanel({ node }: { node?: NormalizedPlanNode }) {
 
   return (
     <div className="h-full rounded-md border border-input bg-secondary/60 p-4">
-      <div className="text-sm font-semibold text-foreground">{node.label}</div>
-      <div className="text-xs text-muted-foreground mb-3">{node.type}</div>
+      <div className="text-sm font-semibold text-foreground wrap-break-word">{node.label}</div>
+      {node.detail && <div className="text-xs text-muted-foreground/80 wrap-break-word">{node.detail}</div>}
 
-      <div className="grid grid-cols-2 gap-2 text-xs">
+      <div className="grid grid-cols-2 gap-2 text-xs mt-3">
         <div>
           <div className="text-muted-foreground">Exclusive time</div>
           <div className="font-medium">{formatMs(metrics.exclusiveTimeMs ?? metrics.totalTimeMs)}</div>

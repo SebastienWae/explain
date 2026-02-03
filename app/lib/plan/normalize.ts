@@ -34,6 +34,7 @@ export type NormalizedPlanNode = {
   id: string;
   type: string;
   label: string;
+  detail?: string;
   db: DatabaseKey;
   metrics: PlanMetrics;
   warnings: PlanWarning[];

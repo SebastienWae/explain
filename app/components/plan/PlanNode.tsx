@@ -45,7 +45,8 @@ export function PlanNode({ data, selected }: NodeProps<PlanFlowNode>) {
   const costPercent =
     costValue !== undefined && stats.maxTotalCost ? Math.min(100, (costValue / stats.maxTotalCost) * 100) : undefined;
 
-  const { title, subtitle } = splitLabel(node.label);
+  const { title } = splitLabel(node.label);
+  const detail = node.detail;
 
   const metricCandidates: MetricRow[] = [
     {
@@ -78,7 +79,7 @@ export function PlanNode({ data, selected }: NodeProps<PlanFlowNode>) {
       <div className="flex items-start gap-2">
         <div className="min-w-0">
           <div className="truncate text-sm font-semibold tracking-tight text-foreground">{title}</div>
-          {subtitle && <div className="truncate text-[11px] text-muted-foreground/80">{subtitle}</div>}
+          {detail && <div className="truncate text-[11px] text-muted-foreground/80">{detail}</div>}
         </div>
       </div>
       <div className="mt-3 overflow-hidden rounded-md border border-white/10 bg-black/25 shadow-inner shadow-black/40">

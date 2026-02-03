@@ -38,6 +38,44 @@ function formatPostgresLabel(nodeType: string, node: Record<string, unknown>) {
   return NODE_TYPE_LABELS[nodeType] ?? nodeType;
 }
 
+function formatDetailValue(value: unknown) {
+  if (value === undefined || value === null) return undefined;
+  if (Array.isArray(value)) {
+    const filtered = value.map((item) => String(item)).filter(Boolean);
+    return filtered.length ? filtered.join(", ") : undefined;
+  }
+  const text = String(value);
+  return text.trim() ? text : undefined;
+}
+
+function formatPostgresDetail(node: Record<string, unknown>) {
+  const sortKey = formatDetailValue(node["Sort Key"]);
+  if (sortKey) return `by ${sortKey}`;
+
+  const groupKey = formatDetailValue(node["Group Key"]);
+  if (groupKey) return `group by ${groupKey}`;
+
+  const hashCond = formatDetailValue(node["Hash Cond"]);
+  if (hashCond) return `on ${hashCond}`;
+
+  const mergeCond = formatDetailValue(node["Merge Cond"]);
+  if (mergeCond) return `on ${mergeCond}`;
+
+  const joinFilter = formatDetailValue(node["Join Filter"]);
+  if (joinFilter) return `on ${joinFilter}`;
+
+  const indexCond = formatDetailValue(node["Index Cond"]);
+  if (indexCond) return `filter ${indexCond}`;
+
+  const recheckCond = formatDetailValue(node["Recheck Cond"]);
+  if (recheckCond) return `filter ${recheckCond}`;
+
+  const filter = formatDetailValue(node.Filter);
+  if (filter) return `filter ${filter}`;
+
+  return undefined;
+}
+
 function extractCteDefinition(node: Record<string, unknown>) {
   const subplan = node["Subplan Name"];
   const parentRelationship = node["Parent Relationship"];
@@ -211,6 +249,7 @@ export function parsePostgresPlan(rawPlan: string): NormalizedPlanGraph {
       id,
       type: nodeType,
       label,
+      detail: formatPostgresDetail(node),
       db: "postgresql",
       metrics,
       warnings: [],
