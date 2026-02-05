@@ -31,8 +31,8 @@ export function buildPostgresWarnings(metrics: PlanMetrics, stats: PlanStats) {
     );
   }
 
-  if (metrics.cost !== undefined && stats.maxTotalCost) {
-    const percent = (metrics.cost / stats.maxTotalCost) * 100;
+  if (metrics.cost !== undefined && stats.maxCost) {
+    const percent = (metrics.cost / stats.maxCost) * 100;
     const severity = severityFromThresholds(percent, [90, 40, 10]);
     addWarning(
       warnings,

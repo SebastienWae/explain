@@ -76,7 +76,7 @@ export function PlanDetailsPanel({ node }: { node?: NormalizedPlanNode }) {
         </div>
         <div>
           <div className="text-muted-foreground">Cost</div>
-          <div className="font-medium">{formatCount(metrics.cost ?? metrics.totalCost)}</div>
+          <div className="font-medium">{formatCount(metrics.cost)}</div>
         </div>
         <div>
           <div className="text-muted-foreground">Rows removed</div>

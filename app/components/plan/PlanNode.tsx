@@ -41,9 +41,9 @@ export function PlanNode({ data, selected }: NodeProps<PlanFlowNode>) {
     selfTime !== undefined && stats.executionTimeMs
       ? Math.min(100, (selfTime / stats.executionTimeMs) * 100)
       : undefined;
-  const costValue = metrics.cost ?? metrics.totalCost;
+  const costValue = metrics.cost;
   const costPercent =
-    costValue !== undefined && stats.maxTotalCost ? Math.min(100, (costValue / stats.maxTotalCost) * 100) : undefined;
+    costValue !== undefined && stats.maxCost ? Math.min(100, (costValue / stats.maxCost) * 100) : undefined;
 
   const { title } = splitLabel(node.label);
   const detail = node.detail;
