@@ -59,7 +59,10 @@ export function parseDuckdbPlan(rawPlan: string): NormalizedPlanGraph {
   const planStats = rootRecord.planStats as Record<string, unknown> | undefined;
   const stats: PlanStats = {
     executionTimeMs: toMs(
-      toNumber(planStats?.executionTime) ?? toNumber(rootRecord.executionTime) ?? toNumber(rootRecord.cpu_time),
+      toNumber(planStats?.executionTime) ??
+        toNumber(rootRecord.executionTime) ??
+        toNumber(rootRecord.latency) ??
+        toNumber(rootRecord.cpu_time),
     ),
   };
 
