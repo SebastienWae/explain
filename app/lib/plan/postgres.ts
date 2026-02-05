@@ -92,8 +92,9 @@ function extractCteReference(node: Record<string, unknown>) {
 }
 
 function computeEstimateFactor(actualRows?: number, planRows?: number) {
-  if (!actualRows || !planRows) return undefined;
-  if (actualRows === 0 || planRows === 0) return undefined;
+  if (actualRows === undefined || planRows === undefined) return undefined;
+  if (actualRows === 0 && planRows === 0) return undefined;
+  if (actualRows === 0 || planRows === 0) return Number.POSITIVE_INFINITY;
   if (actualRows >= planRows) return actualRows / planRows;
   return planRows / actualRows;
 }

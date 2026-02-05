@@ -13,6 +13,13 @@ function addWarning(list: PlanWarning[], warning: PlanWarning | null) {
   if (warning) list.push(warning);
 }
 
+function hasZeroNonZeroEstimateMismatch(metrics: PlanMetrics) {
+  if (metrics.actualRows === undefined || metrics.planRows === undefined) return false;
+  const actualIsZero = metrics.actualRows === 0;
+  const planIsZero = metrics.planRows === 0;
+  return actualIsZero !== planIsZero;
+}
+
 export function buildPostgresWarnings(metrics: PlanMetrics, stats: PlanStats) {
   const warnings: PlanWarning[] = [];
   if (metrics.exclusiveTimeMs !== undefined && stats.executionTimeMs) {
@@ -49,7 +56,8 @@ export function buildPostgresWarnings(metrics: PlanMetrics, stats: PlanStats) {
 
   if (metrics.estimateFactor !== undefined) {
     const factor = metrics.estimateFactor;
-    const severity = factor > 1000 ? 4 : factor > 100 ? 3 : factor > 10 ? 2 : null;
+    const hasZeroMismatch = hasZeroNonZeroEstimateMismatch(metrics);
+    const severity = hasZeroMismatch ? 4 : factor > 1000 ? 4 : factor > 100 ? 3 : factor > 10 ? 2 : null;
     addWarning(
       warnings,
       severity
@@ -57,7 +65,9 @@ export function buildPostgresWarnings(metrics: PlanMetrics, stats: PlanStats) {
             kind: "estimate",
             severity,
             value: factor,
-            message: `Bad row estimate (x${factor.toFixed(1)})`,
+            message: hasZeroMismatch
+              ? "Bad row estimate (zero/non-zero mismatch)"
+              : `Bad row estimate (x${factor.toFixed(1)})`,
           }
         : null,
     );
