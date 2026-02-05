@@ -39,7 +39,7 @@ export function PlanVisualizer({
   return (
     <div className="flex flex-1 min-h-0 flex-col gap-4">
       <div className="flex items-center gap-4">
-        <Button variant="secondary" size="icon" onClick={onBack}>
+        <Button variant="secondary" size="icon" onClick={onBack} aria-label="Back to plan editor">
           <IconArrowLeft />
         </Button>
         <ToggleGroup

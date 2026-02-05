@@ -33,6 +33,7 @@ function SocialLinks() {
       <Button
         variant="secondary"
         size="icon"
+        aria-label="Open GitHub repository"
         nativeButton={false}
         render={
           <a href="https://github.com/SebastienWae/explain" rel="noreferrer" target="_blank">
@@ -43,6 +44,7 @@ function SocialLinks() {
       <Button
         variant="secondary"
         size="icon"
+        aria-label="Open X profile"
         nativeButton={false}
         render={
           <a href="https://x.com/Seb_Wae" rel="noreferrer" target="_blank">

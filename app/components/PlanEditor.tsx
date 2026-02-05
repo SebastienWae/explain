@@ -122,7 +122,7 @@ export function PlanEditor({
           </Select>
           <div className="flex gap-4 items-center">
             <span className="text-muted-foreground text-sm">{database.name}</span>
-            <Button onClick={onSubmit} disabled={!plan.trim()}>
+            <Button onClick={onSubmit} disabled={!plan.trim()} aria-label={`Visualize ${database.name} plan`}>
               <IconArrowBigUpFilled />
             </Button>
           </div>
